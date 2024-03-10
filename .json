@@ -1,0 +1,44 @@
+{
+   "version": "3",
+   "services": {
+      "web": {
+         "build": ".",
+         "ports": [
+            "8001:80"
+         ],
+         "volumes": [
+            ".:/app:rw",
+            "./data:/data:rw"
+         ],
+         "command": "python manage.py runserver 0.0.0.0:80",
+         "networks": [
+            "djangocmsnet"
+         ],
+         "env_file": ".env-local"
+      },
+      "database_default": {
+         "image": "postgres:15-alpine",
+         "ports": [
+            "${DB_PORT-}:5432/tcp"
+         ],
+         "environment": {
+            "POSTGRES_DB": "db",
+            "POSTGRES_PASSWORD": "password",
+            "POSTGRES_HOST_AUTH_METHOD": "trust",
+            "SERVICE_MANAGER": "fsm-postgres"
+         },
+         "networks": [
+            "djangocmsnet"
+         ],
+         "volumes": [
+            "postgres-data:/var/lib/postgresql/data/"
+         ]
+      }
+   },
+   "networks": {
+      "djangocmsnet": null
+   },
+   "volumes": {
+      "postgres-data": null
+   }
+}
